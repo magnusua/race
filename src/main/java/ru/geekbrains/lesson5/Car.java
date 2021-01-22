@@ -1,17 +1,24 @@
 package ru.geekbrains.lesson5;
 
-public class Car implements Runnable {
-    private static int CARS_COUNT = 0;
-    private static boolean isWinner;
-    private Race race;
-    private int speed;
-    private String name;
+import javax.swing.*;
+import java.util.concurrent.Phaser;
+import java.util.concurrent.atomic.AtomicInteger;
 
-    public Car(Race race, int speed) {
+public class Car implements Runnable {
+    private static int CARS_COUNT = 1;
+    private static boolean isWinner;
+    private Phaser phaser;
+    private static final AtomicInteger RacePosition = new AtomicInteger();
+    private final Race race;
+    private final int speed;
+    private final String name;
+
+    public Car(Race race, int speed, Phaser phaser) {
         this.race = race;
         this.speed = speed;
-        CARS_COUNT++;
         this.name = "Участник #" + CARS_COUNT;
+        this.phaser = phaser;
+        CARS_COUNT++;
     }
 
     public String getName() {
@@ -28,21 +35,22 @@ public class Car implements Runnable {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int) (Math.random() * 800));
             System.out.println(this.name + " готов");
-            Main.countDownLatchRaceStart.countDown();
-            Main.cyclicBarrier.await();
+            phaser.arriveAndAwaitAdvance();
         } catch (Exception e) {
             e.printStackTrace();
         }
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }
+
         Main.winnerLock.lock();
         if (!isWinner) {
-            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> " + this.name + " - ПОБЕДИТЕЛЬ!!!");
-            System.err.println(this.name + " - ПОБЕДИТЕЛЬ!");
+            System.err.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> " + this.name + " - ПОБЕДИТЕЛЬ!!!");
+            JOptionPane.showConfirmDialog(null, this.name + " - ПОБЕДИТЕЛЬ!!!", "Уведомление", JOptionPane.CLOSED_OPTION);
             isWinner = true;
         }
         Main.winnerLock.unlock();
-        Main.countDownLatchRaceEnd.countDown();
+        System.err.println(">>> " + this.name + " занял " + RacePosition.incrementAndGet() + " место.");
+        phaser.arrive();
     }
 }
