@@ -28,13 +28,11 @@ public class Main {
             new Thread(cars[i]).start(); //стартуем новый поток
         }
 
-        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+        System.err.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
 
         phaser.awaitAdvance(0);
-
-
         phaser.awaitAdvance(1);
-        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
+        System.err.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
 
     }
 }

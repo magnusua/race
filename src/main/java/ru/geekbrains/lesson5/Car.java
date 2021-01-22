@@ -46,11 +46,11 @@ public class Car implements Runnable {
         Main.winnerLock.lock();
         if (!isWinner) {
             System.err.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> " + this.name + " - ПОБЕДИТЕЛЬ!!!");
-            JOptionPane.showConfirmDialog(null, this.name + " - ПОБЕДИТЕЛЬ!!!", "Уведомление", JOptionPane.CLOSED_OPTION);
             isWinner = true;
+            JOptionPane.showConfirmDialog(null, this.name + " - ПОБЕДИТЕЛЬ!!!", "Уведомление", JOptionPane.CLOSED_OPTION);
         }
         Main.winnerLock.unlock();
         System.err.println(">>> " + this.name + " занял " + RacePosition.incrementAndGet() + " место.");
-        phaser.arrive();
+        phaser.arriveAndAwaitAdvance();
     }
 }
