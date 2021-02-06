@@ -1,6 +1,6 @@
 # race
-Project for multithreading
-синхронизаторы java.util.concurrent.*
-Semaphore
-CountDownLatch
-Phaser
+Project for multithreading<br>
+синхронизаторы java.util.concurrent.* <br>
+Semaphore<br>
+CountDownLatch<br>
+Phaser<br>
